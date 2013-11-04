@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Streamingly::VERSION
   spec.authors       = ["Matt Gillooly"]
   spec.email         = ["matt@swipely.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Helpful classes for writing streaming Hadoop jobs in Ruby}
+  spec.summary       = %q{Helpful classes for writing streaming Hadoop jobs in Ruby}
+  spec.homepage      = "http://github.com/swipely/streamingly"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
