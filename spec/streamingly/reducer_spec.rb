@@ -62,6 +62,32 @@ describe Streamingly::Reducer do
       end
     end
 
+    context "when supplied with accumulator options" do
+      let(:accumulator_options) { { foo: 'bar' } }
+      subject { described_class.new(accumulator_class, accumulator_options) }
+
+      let(:key) { 'key' }
+      let(:value) { 'asdf' }
+
+      let(:records) {
+        [
+          [key, value].join("\t")
+        ]
+      }
+
+      let(:accumulator) { double(:accumulator, :flush => []) }
+
+      before do
+        accumulator_class.stub(:new).with(key, accumulator_options) { accumulator }
+      end
+
+      it "uses the accumulator_options to initialize each accumulator" do
+        accumulator.should_receive(:apply_value).with(value)
+
+        subject.reduce_over(records)
+      end
+    end
+
   end
 
 end

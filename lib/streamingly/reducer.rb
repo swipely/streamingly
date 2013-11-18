@@ -1,8 +1,9 @@
 module Streamingly
   class Reducer
 
-    def initialize(accumulator_class)
+    def initialize(accumulator_class, accumulator_options=nil)
       @accumulator_class = accumulator_class
+      @accumulator_options = accumulator_options
     end
 
     def reduce_over(enumerator)
@@ -30,7 +31,7 @@ module Streamingly
         results = flush
 
         @prev_key = key
-        @accumulator = @accumulator_class.new(key)
+        @accumulator = new_accumulator(key)
       end
 
       @accumulator.apply_value(value)
@@ -38,5 +39,12 @@ module Streamingly
       results || []
     end
 
+    def new_accumulator(key)
+      if @accumulator_options
+        @accumulator_class.new(key, @accumulator_options)
+      else
+        @accumulator_class.new(key)
+      end
+    end
   end
 end
