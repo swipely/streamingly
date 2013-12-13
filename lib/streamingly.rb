@@ -1,6 +1,13 @@
 require "streamingly/version"
 require "streamingly/reducer"
+require "streamingly/kv"
+require "streamingly/serde"
+require "streamingly/serde_iterable"
 
 module Streamingly
-  # Your code goes here...
+
+  def self.kv(key, value)
+    KV.new(key, value).to_s
+  end
+
 end
