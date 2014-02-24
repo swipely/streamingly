@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'csv'
 
 module Streamingly
 
@@ -23,7 +24,7 @@ module Streamingly
 
     def self.from_csv(string)
       tokens = CSV.parse_line(string)
-      klass = Kernel.const_get(tokens.first)
+      klass = resolve_class(tokens.first)
       klass.new(*tokens[1..-1])
     rescue NameError
       tokens
@@ -32,6 +33,10 @@ module Streamingly
     def self.from_tabbed_csv(string)
       k,v = string.split("\t")
       KV.new(from_csv(k), from_csv(v))
+    end
+
+    def self.resolve_class(class_name)
+      class_name.split('::').reduce(Kernel) { |parent, element| parent.const_get(element) }
     end
   end
 
