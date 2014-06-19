@@ -25,7 +25,10 @@ module Streamingly
     end
 
     def reduce(line)
-      key, value = line.split("\t")
+      # Streaming Hadoop only treats the first tab as the delimiter between
+      # the key and value.  Additional tabs are grouped into the value:
+      # http://hadoop.apache.org/docs/r0.18.3/streaming.html#How+Does+Streaming+Work
+      key, value = line.split("\t", 2)
 
       if @prev_key != key
         results = flush

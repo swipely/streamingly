@@ -62,6 +62,29 @@ describe Streamingly::Reducer do
       end
     end
 
+    context "given a record with multiple tabs" do
+      let(:key) { 'key1' }
+      let(:value) { "asdf\tqwerty" }
+
+      let(:records) {
+        [
+          [key, value].join("\t"),
+        ]
+      }
+
+      let(:accumulator) { double(:accumulator, :flush => []) }
+
+      before do
+        accumulator_class.stub(:new).with(key) { accumulator }
+      end
+
+      it "treats only the first tab as the key/value delimiter and leaves the value untouched" do
+        accumulator.should_receive(:apply_value).with(value)
+
+        subject.reduce_over(records)
+      end
+    end
+
     context "when supplied with accumulator options" do
       let(:accumulator_options) { { foo: 'bar' } }
       subject { described_class.new(accumulator_class, accumulator_options) }
