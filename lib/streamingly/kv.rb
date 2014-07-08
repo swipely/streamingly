@@ -11,7 +11,7 @@ module Streamingly
     end
 
     # TODO: remove .split from https://github.com/swipely/streamingly/blob/master/lib/streamingly/reducer.rb#L28
-    def split(char="\t")
+    def split(char="\t", limit=1)
       [key, value]
     end
   end
