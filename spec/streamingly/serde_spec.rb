@@ -38,7 +38,7 @@ describe Streamingly::SerDe do
       :val2
     )
 
-    context "convert csv" do
+    context "converting a csv" do
 
       subject { Streamingly::SerDe.from_tabbed_csv "SampleKey,id\tSampleVal,one,two" }
 
@@ -54,7 +54,7 @@ describe Streamingly::SerDe do
       end
     end
 
-    context "convert csv with extra tabs" do
+    context "converting a csv with extra tabs" do
 
       subject { Streamingly::SerDe.from_tabbed_csv "SampleKey,id\tSampleVal,one \t \t,two \t" }
 
