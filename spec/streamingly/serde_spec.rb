@@ -28,4 +28,16 @@ describe Streamingly::SerDe do
     end
   end
 
+  describe ".from_tabbed_csv(string)" do
+    context "given a string with a wide character" do
+      let(:key) { [ "fonda-avenue-b-new-york", "62001" ] }
+      let(:value) { [ "Sauvigñon Glass", "Item" ] }
+      let(:line) { "#{key.join(',')}\t#{value.join(',')}".force_encoding("us-ascii") }
+
+      it "correctly handles the input" do
+        expect(described_class.from_tabbed_csv(line)).to eq(Streamingly::KV.new(key, value))
+      end
+    end
+  end
+
 end

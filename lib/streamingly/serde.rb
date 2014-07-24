@@ -31,7 +31,7 @@ module Streamingly
     end
 
     def self.from_tabbed_csv(string)
-      k,v = string.split("\t")
+      k,v = string.force_encoding('utf-8').split("\t")
       KV.new(from_csv(k), from_csv(v))
     end
 
