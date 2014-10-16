@@ -1,9 +1,10 @@
 module Streamingly
   class Reducer
 
-    def initialize(accumulator_class, accumulator_options=nil)
+    def initialize(accumulator_class, accumulator_options = nil)
       @accumulator_class = accumulator_class
       @accumulator_options = accumulator_options
+      @error_callback_defined = @accumulator_class.method_defined?(:on_error)
     end
 
     def reduce_over(enumerator)
@@ -16,12 +17,16 @@ module Streamingly
       flush.each do |out|
         yield out
       end
+
     end
 
   private
 
     def flush
       @accumulator ? @accumulator.flush : []
+    rescue StandardError => error
+      on_error(error)
+      []
     end
 
     def reduce(line)
@@ -40,6 +45,14 @@ module Streamingly
       @accumulator.apply_value(value)
 
       results || []
+    rescue StandardError => error
+      on_error(error)
+      []
+    end
+
+    def on_error(error)
+      raise error unless @error_callback_defined
+      @accumulator.on_error(error)
     end
 
     def new_accumulator(key)
