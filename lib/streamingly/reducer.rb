@@ -25,7 +25,7 @@ module Streamingly
     def flush
       @accumulator ? @accumulator.flush : []
     rescue StandardError => error
-      on_error(error)
+      on_error(error, {})
       []
     end
 
@@ -46,13 +46,13 @@ module Streamingly
 
       results || []
     rescue StandardError => error
-      on_error(error)
+      on_error(error, { :line => line })
       []
     end
 
-    def on_error(error)
+    def on_error(error, error_context)
       raise error unless @error_callback_defined
-      @accumulator.on_error(error)
+      @accumulator.on_error(error, error_context)
     end
 
     def new_accumulator(key)

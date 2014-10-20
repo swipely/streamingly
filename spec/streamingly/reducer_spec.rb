@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 class TestAccumulator
-  attr_reader :applied_values, :raised_errors
+  attr_reader :applied_values, :raised_errors, :error_contexts
 
   def initialize
     @applied_values = []
     @raised_errors = []
+    @error_contexts = []
   end
 
   def apply_value(value)
@@ -16,8 +17,9 @@ class TestAccumulator
     []
   end
 
-  def on_error(error)
+  def on_error(error, error_context)
     @raised_errors << error
+    @error_contexts << error_context
   end
 end
 
@@ -143,12 +145,16 @@ describe Streamingly::Reducer do
           expect(accumulator.applied_values).to eq([value1, value2])
         end
 
-        it "calls supplied error callback" do
+        it "calls supplied error callback with correct context" do
           subject.reduce_over(records)
 
           expect(accumulator.raised_errors.size).to eq(1)
           raised_error = accumulator.raised_errors[0]
           expect(raised_error.class).to eq(ArgumentError)
+
+          expect(accumulator.error_contexts.size).to eq(1)
+          error_context = accumulator.error_contexts[0]
+          expect(error_context[:line]).to eq([key, value1].join("\t"))
         end
       end
 
@@ -205,6 +211,9 @@ describe Streamingly::Reducer do
           expect(accumulator1.raised_errors.size).to eq(1)
           raised_error = accumulator1.raised_errors[0]
           expect(raised_error.class).to eq(RuntimeError)
+
+          expect(accumulator1.error_contexts.size).to eq(1)
+          expect(accumulator1.error_contexts[0]).to be_empty
 
           expect(accumulator2.raised_errors.size).to eq(0)
         end
