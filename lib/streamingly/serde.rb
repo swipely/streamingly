@@ -8,6 +8,8 @@ module Streamingly
       case record
       when String
         record
+      when Streamingly::KV
+        record.to_s
       when Struct
         tokens = *record.map { |token|
           case token
