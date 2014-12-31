@@ -33,8 +33,22 @@ module Streamingly
     end
 
     def self.from_tabbed_csv(string)
-      k,v = string.split("\t")
-      KV.new(from_csv(k), from_csv(v))
+      k, v = string.split("\t", 2)
+      key = from_string_or_csv(k)
+      value = if v.include? "\t"
+                from_tabbed_csv(v)
+              else
+                from_string_or_csv(v)
+              end
+      KV.new(key, value)
+    end
+
+    def self.from_string_or_csv(string)
+      if string.include? ','
+        from_csv(string)
+      else
+        string
+      end
     end
 
     def self.resolve_class(class_name)
