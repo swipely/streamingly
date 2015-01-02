@@ -34,6 +34,7 @@ module Streamingly
 
     def self.from_tabbed_csv(string)
       k, v = string.split("\t", 2)
+      return if k.nil? || v.nil?
       key = from_string_or_csv(k)
       value = if v.include? "\t"
                 from_tabbed_csv(v)
