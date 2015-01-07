@@ -45,4 +45,18 @@ describe Streamingly::SerDe do
       expect(described_class.to_csv(record)).to eq 'Record,1,string_value'
     end
   end
+
+  describe '.from_string_or_csv' do
+    it 'returns CSV serialization for CSV string' do
+      expect(described_class.from_string_or_csv('1,2')).to eq ['1', '2']
+    end
+
+    it 'returns string if not containing a comma' do
+      expect(described_class.from_string_or_csv('foo')).to eq 'foo'
+    end
+
+    it 'returns string if containing a comma but not valid CSV' do
+      expect(described_class.from_string_or_csv('"foo,bar')).to eq '"foo,bar'
+    end
+  end
 end
