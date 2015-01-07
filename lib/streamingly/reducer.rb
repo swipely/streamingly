@@ -51,7 +51,7 @@ module Streamingly
     end
 
     def on_error(error, error_context)
-      raise error unless @error_callback_defined
+      raise error unless @error_callback_defined && !@accumulator.nil?
       @accumulator.on_error(error, error_context)
     end
 
