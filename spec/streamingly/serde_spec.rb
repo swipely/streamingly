@@ -59,4 +59,12 @@ describe Streamingly::SerDe do
       expect(described_class.from_string_or_csv('"foo,bar')).to eq '"foo,bar'
     end
   end
+
+  describe '.from_tabbed_csv' do
+    it 'returns nested KV pair structure with the first tab as the split' do
+      expect(described_class.from_tabbed_csv("a\tb\tc")).to eq(
+        Streamingly::KV.new('a', Streamingly::KV.new('b', 'c'))
+      )
+    end
+  end
 end
