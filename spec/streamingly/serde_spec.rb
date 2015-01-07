@@ -28,4 +28,21 @@ describe Streamingly::SerDe do
     end
   end
 
+  describe '.to_csv' do
+    it 'is identity function for a string' do
+      record = 'test_string'
+      expect(described_class.to_csv(record)).to eq record
+    end
+
+    it 'is equal to string version of Streamingly kv' do
+      record = Streamingly::KV.new('key', 'value')
+      expect(described_class.to_csv(record)).to eq record.to_s
+    end
+
+    it 'serializes struct to CSV, interpreting decimal fields as floats' do
+      Record = Struct.new(:number, :string)
+      record = Record.new(1, 'string_value')
+      expect(described_class.to_csv(record)).to eq 'Record,1,string_value'
+    end
+  end
 end
