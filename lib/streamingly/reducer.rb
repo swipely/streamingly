@@ -23,7 +23,7 @@ module Streamingly
   private
 
     def flush
-      @accumulator ? @accumulator.flush : []
+      @accumulator ? (@accumulator.flush || []).compact : []
     rescue StandardError => error
       on_error(error, {})
       []
@@ -33,8 +33,10 @@ module Streamingly
       # Streaming Hadoop only treats the first tab as the delimiter between
       # the key and value.  Additional tabs are grouped into the value:
       # http://hadoop.apache.org/docs/r0.18.3/streaming.html#How+Does+Streaming+Work
-      key, value = line.split("\t", 2)
+      key, value = (line || '').split("\t", 2)
+      return [] unless key && value
 
+      results = nil
       if @prev_key != key
         results = flush
 
@@ -42,11 +44,11 @@ module Streamingly
         @accumulator = new_accumulator(key)
       end
 
-      @accumulator.apply_value(value)
+      @accumulator.apply_value(value) if @accumulator
 
       results || []
     rescue StandardError => error
-      on_error(error, { :line => line })
+      on_error(error, line: line)
       []
     end
 
