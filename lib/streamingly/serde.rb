@@ -27,7 +27,7 @@ module Streamingly
     def self.from_csv(string)
       tokens = CSV.parse_line(string)
       klass = resolve_class(tokens.first)
-      klass.new(*tokens[1..-1])
+      klass.new(*tokens[1..-1].compact)
     rescue NameError
       tokens
     end
