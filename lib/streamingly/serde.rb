@@ -26,8 +26,12 @@ module Streamingly
 
     def self.from_csv(string)
       tokens = CSV.parse_line(string)
+      return unless tokens.size > 0
       klass = resolve_class(tokens.first)
-      klass.new(*tokens[1..-1].compact)
+      tokens_arr = tokens.to_a
+      tokens_arr.pop while tokens_arr.last.nil?
+      tokens_arr.shift  # Remove leading class marker
+      klass.new(*tokens_arr)
     rescue NameError
       tokens
     end
