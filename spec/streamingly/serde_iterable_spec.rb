@@ -17,7 +17,7 @@ describe Streamingly::SerDeIterable do
   end
 
   describe 'given custom error handler' do
-    let(:error_handler) { double(:error_handler, method_defined?: true) }
+    let(:error_handler) { double(:error_handler, respond_to?: true) }
     subject { described_class.new(iterable, error_handler) }
 
     it 'calls on_error method of provided handler' do
