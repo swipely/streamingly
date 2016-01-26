@@ -58,12 +58,13 @@ describe Streamingly::Reducer do
       let(:accumulator) { double(:accumulator, :flush => []) }
 
       before do
-        accumulator_class.stub(:new).with(key) { accumulator }
+        allow(accumulator_class).to \
+          receive(:new).with(key).and_return(accumulator)
       end
 
       it "combines them into the same accumulator" do
-        accumulator.should_receive(:apply_value).with(value1)
-        accumulator.should_receive(:apply_value).with(value2)
+        expect(accumulator).to receive(:apply_value).with(value1)
+        expect(accumulator).to receive(:apply_value).with(value2)
 
         subject.reduce_over(records)
       end
@@ -86,13 +87,15 @@ describe Streamingly::Reducer do
       let(:accumulator2) { double(:accumulator, :flush => []) }
 
       before do
-        accumulator_class.stub(:new).with(key1) { accumulator1 }
-        accumulator_class.stub(:new).with(key2) { accumulator2 }
+        allow(accumulator_class).to \
+          receive(:new).with(key1).and_return(accumulator1)
+        allow(accumulator_class).to \
+          receive(:new).with(key2).and_return(accumulator2)
       end
 
       it "sends them to different accumulators" do
-        accumulator1.should_receive(:apply_value).with(value1)
-        accumulator2.should_receive(:apply_value).with(value2)
+        expect(accumulator1).to receive(:apply_value).with(value1)
+        expect(accumulator2).to receive(:apply_value).with(value2)
 
         subject.reduce_over(records)
       end
@@ -111,11 +114,12 @@ describe Streamingly::Reducer do
       let(:accumulator) { double(:accumulator, :flush => []) }
 
       before do
-        accumulator_class.stub(:new).with(key) { accumulator }
+        allow(accumulator_class).to \
+          receive(:new).with(key).and_return(accumulator)
       end
 
       it "treats only the first tab as the key/value delimiter and leaves the value untouched" do
-        accumulator.should_receive(:apply_value).with(value)
+        expect(accumulator).to receive(:apply_value).with(value)
 
         subject.reduce_over(records)
       end
@@ -136,7 +140,8 @@ describe Streamingly::Reducer do
 
       context "with error callback specified" do
         before do
-          accumulator_class.stub(:new).with(key) { accumulator }
+          allow(accumulator_class).to \
+            receive(:new).with(key).and_return(accumulator)
         end
 
         it "keeps processing after error applying value" do
@@ -163,7 +168,8 @@ describe Streamingly::Reducer do
         subject { described_class.new(accumulator_class) }
 
         before do
-            accumulator_class.stub(:new).with(key) { accumulator }
+          allow(accumulator_class).to \
+            receive(:new).with(key).and_return(accumulator)
         end
 
         it "stops processing after error applying value" do
@@ -193,8 +199,10 @@ describe Streamingly::Reducer do
 
       context "with error callback specified" do
         before do
-          accumulator_class.stub(:new).with(key1) { accumulator1 }
-          accumulator_class.stub(:new).with(key2) { accumulator2 }
+          allow(accumulator_class).to \
+            receive(:new).with(key1).and_return(accumulator1)
+          allow(accumulator_class).to \
+            receive(:new).with(key2).and_return(accumulator2)
         end
 
         it "keeps processing after error applying value" do
@@ -224,8 +232,10 @@ describe Streamingly::Reducer do
         subject { described_class.new(accumulator_class) }
 
         before do
-          accumulator_class.stub(:new).with(key1) { accumulator1 }
-          accumulator_class.stub(:new).with(key2) { accumulator2 }
+          allow(accumulator_class).to \
+            receive(:new).with(key1).and_return(accumulator1)
+          allow(accumulator_class).to \
+            receive(:new).with(key2).and_return(accumulator2)
         end
 
         it "stops processing after error applying value" do
@@ -256,11 +266,12 @@ describe Streamingly::Reducer do
       let(:accumulator) { double(:accumulator, :flush => []) }
 
       before do
-        accumulator_class.stub(:new).with(key, accumulator_options) { accumulator }
+        allow(accumulator_class).to \
+          receive(:new).with(key, accumulator_options).and_return(accumulator)
       end
 
       it "uses the accumulator_options to initialize each accumulator" do
-        accumulator.should_receive(:apply_value).with(value)
+        expect(accumulator).to receive(:apply_value).with(value)
 
         subject.reduce_over(records)
       end
