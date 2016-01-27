@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+class TestErrorHandler
+  def on_error(error, context)
+    nil
+  end
+end
+
 describe Streamingly::SerDeIterable do
   let(:iterable) { [1] }
   let(:error) { StandardError.new('error') }
@@ -17,7 +23,7 @@ describe Streamingly::SerDeIterable do
   end
 
   describe 'given custom error handler' do
-    let(:error_handler) { double(:error_handler, respond_to?: true) }
+    let(:error_handler) { TestErrorHandler.new }
     subject { described_class.new(iterable, error_handler) }
 
     it 'calls on_error method of provided handler' do

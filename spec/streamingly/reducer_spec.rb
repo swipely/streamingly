@@ -41,6 +41,12 @@ describe Streamingly::Reducer do
   let(:accumulator_class) { double(:accumulator_class, :method_defined? => true) }
   subject { described_class.new(accumulator_class) }
 
+  describe '#on_error' do
+    it 'is exposed as public method' do
+      expect(subject).to respond_to(:on_error)
+    end
+  end
+
   describe "#reduce_over" do
 
     context "given records with the same key" do
