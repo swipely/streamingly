@@ -5,7 +5,7 @@ module Streamingly
       @iterable = iterable
       @error_handler = error_handler
       @error_callback_defined = @error_handler &&
-                                @error_handler.method_defined?(:on_error)
+                                @error_handler.respond_to?(:on_error)
     end
 
     def each

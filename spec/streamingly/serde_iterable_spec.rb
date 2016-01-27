@@ -12,12 +12,12 @@ describe Streamingly::SerDeIterable do
     subject { described_class.new(iterable) }
 
     it 'raises error when calling each' do
-      expect { subject.each }.to raise_error
+      expect { subject.each }.to raise_error(StandardError)
     end
   end
 
   describe 'given custom error handler' do
-    let(:error_handler) { double(:error_handler, method_defined?: true) }
+    let(:error_handler) { double(:error_handler, respond_to?: true) }
     subject { described_class.new(iterable, error_handler) }
 
     it 'calls on_error method of provided handler' do
