@@ -20,7 +20,12 @@ module Streamingly
 
     end
 
-  private
+    def on_error(error, error_context)
+      raise error unless @error_callback_defined && !@accumulator.nil?
+      @accumulator.on_error(error, error_context)
+    end
+
+    private
 
     def flush
       @accumulator ? (@accumulator.flush || []).compact : []
@@ -50,11 +55,6 @@ module Streamingly
     rescue StandardError => error
       on_error(error, line: line)
       []
-    end
-
-    def on_error(error, error_context)
-      raise error unless @error_callback_defined && !@accumulator.nil?
-      @accumulator.on_error(error, error_context)
     end
 
     def new_accumulator(key)
