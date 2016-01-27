@@ -14,7 +14,7 @@ module Streamingly
           yield Streamingly::SerDe.from_tabbed_csv(line)
         rescue => error
           if @error_callback_defined
-            @error_handler.send(:on_error, error, line: line)
+            @error_handler.on_error(error, line: line)
           else
             raise error
           end
